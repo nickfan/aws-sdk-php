@@ -16,9 +16,11 @@ use GuzzleHttp\Promise\FulfilledPromise;
  *
  * @return callable
  */
+if (!function_exists(__NAMESPACE__ . '\constantly')){
 function constantly($value)
 {
     return function () use ($value) { return $value; };
+}
 }
 
 /**
@@ -29,6 +31,7 @@ function constantly($value)
  *
  * @return \Generator
  */
+if (!function_exists(__NAMESPACE__ . '\filter')){
 function filter($iterable, callable $pred)
 {
     foreach ($iterable as $value) {
@@ -36,6 +39,7 @@ function filter($iterable, callable $pred)
             yield $value;
         }
     }
+}
 }
 
 /**
@@ -46,11 +50,13 @@ function filter($iterable, callable $pred)
  *
  * @return \Generator
  */
+if (!function_exists(__NAMESPACE__ . '\map')){
 function map($iterable, callable $f)
 {
     foreach ($iterable as $value) {
         yield $f($value);
     }
+}
 }
 
 /**
@@ -63,6 +69,7 @@ function map($iterable, callable $f)
  *
  * @return \Generator
  */
+if (!function_exists(__NAMESPACE__ . '\flatmap')){
 function flatmap($iterable, callable $f)
 {
     foreach (map($iterable, $f) as $outer) {
@@ -70,6 +77,7 @@ function flatmap($iterable, callable $f)
             yield $inner;
         }
     }
+}
 }
 
 /**
@@ -80,6 +88,7 @@ function flatmap($iterable, callable $f)
  *
  * @return \Generator
  */
+if (!function_exists(__NAMESPACE__ . '\partition')){
 function partition($iterable, $size)
 {
     $buffer = [];
@@ -95,6 +104,7 @@ function partition($iterable, $size)
         yield $buffer;
     }
 }
+}
 
 /**
  * Returns a function that invokes the provided variadic functions one
@@ -109,6 +119,7 @@ function partition($iterable, $size)
  *
  * @return callable
  */
+if (!function_exists(__NAMESPACE__ . '\or_chain')){
 function or_chain()
 {
     $fns = func_get_args();
@@ -122,6 +133,7 @@ function or_chain()
         }
         return null;
     };
+}
 }
 
 //-----------------------------------------------------------------------------
@@ -139,6 +151,7 @@ function or_chain()
  * @return mixed Returns the JSON decoded data. Note that JSON objects are
  *     decoded as associative arrays.
  */
+if (!function_exists(__NAMESPACE__ . '\load_compiled_json')){
 function load_compiled_json($path)
 {
     if ($compiled = @include("$path.php")) {
@@ -153,13 +166,16 @@ function load_compiled_json($path)
 
     return json_decode(file_get_contents($path), true);
 }
+}
 
 /**
  * No-op
  */
+if (!function_exists(__NAMESPACE__ . '\clear_compiled_json')){
 function clear_compiled_json()
 {
     // pass
+}
 }
 
 //-----------------------------------------------------------------------------
@@ -174,6 +190,7 @@ function clear_compiled_json()
  *
  * @return \Generator Yields relative filename strings.
  */
+if (!function_exists(__NAMESPACE__ . '\dir_iterator')){
 function dir_iterator($path, $context = null)
 {
     $dh = $context ? opendir($path, $context) : opendir($path);
@@ -184,6 +201,7 @@ function dir_iterator($path, $context = null)
         yield $file;
     }
     closedir($dh);
+}
 }
 
 /**
@@ -198,6 +216,7 @@ function dir_iterator($path, $context = null)
  *
  * @return \Generator Yields absolute filenames.
  */
+if (!function_exists(__NAMESPACE__ . '\recursive_dir_iterator')){
 function recursive_dir_iterator($path, $context = null)
 {
     $invalid = ['.' => true, '..' => true];
@@ -227,6 +246,7 @@ function recursive_dir_iterator($path, $context = null)
         $iterator = array_pop($queue);
     } while ($iterator);
 }
+}
 
 //-----------------------------------------------------------------------------
 // Misc. functions.
@@ -240,6 +260,7 @@ function recursive_dir_iterator($path, $context = null)
  * @return string Returns a string containing the type of the variable and
  *                if a class is provided, the class name.
  */
+if (!function_exists(__NAMESPACE__ . '\describe_type')){
 function describe_type($input)
 {
     switch (gettype($input)) {
@@ -254,12 +275,14 @@ function describe_type($input)
             return str_replace('double(', 'float(', rtrim(ob_get_clean()));
     }
 }
+}
 
 /**
  * Creates a default HTTP handler based on the available clients.
  *
  * @return callable
  */
+if (!function_exists(__NAMESPACE__ . '\default_http_handler')){
 function default_http_handler()
 {
     $version = (string) ClientInterface::VERSION;
@@ -270,6 +293,7 @@ function default_http_handler()
     } else {
         throw new \RuntimeException('Unknown Guzzle version: ' . $version);
     }
+}
 }
 
 /**
@@ -282,6 +306,7 @@ function default_http_handler()
  * @return RequestInterface
  * @throws \RuntimeException
  */
+if (!function_exists(__NAMESPACE__ . '\serialize')){
 function serialize(CommandInterface $command)
 {
     $request = null;
@@ -304,6 +329,7 @@ function serialize(CommandInterface $command)
 
     return $request;
 }
+}
 
 /**
  * Retrieves data for a service from the SDK's service manifest file.
@@ -317,6 +343,7 @@ function serialize(CommandInterface $command)
  * @return array
  * @throws \InvalidArgumentException if the service is not supported.
  */
+if (!function_exists(__NAMESPACE__ . '\manifest')){
 function manifest($service = null)
 {
     // Load the manifest and create aliases for lowercased namespaces
@@ -348,4 +375,5 @@ function manifest($service = null)
             "The service \"{$service}\" is not provided by the AWS SDK for PHP."
         );
     }
+}
 }
